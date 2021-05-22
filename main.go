@@ -8,7 +8,11 @@ import (
 
 func app() error {
 
-	handler := routes.Initialize()
+	handler, err := routes.Initialize()
+	if err != nil {
+		return err
+	}
+
 	server := &http.Server{
 		Addr: ":8080",
 		Handler: handler,
