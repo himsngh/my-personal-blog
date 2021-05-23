@@ -1,5 +1,14 @@
 
-div {
-    color: black;
-    background-color: red;
+main {
+    display: grid;
+}
+
+.main-article-1 {
+    grid-column: 1/2;
+}
+.main-article-2 {
+    grid-column: 2/4;
+}
+.main-article-3 {
+    grid-column: 4/5;
 }
