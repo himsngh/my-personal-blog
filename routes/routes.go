@@ -15,9 +15,8 @@ func Initialize() (http.Handler, error) {
 
 	handler := http.NewServeMux()
 
-
 	fs := http.FileServer(http.Dir(cwd + "/static"))
-	handler.Handle("/static/", http.StripPrefix("/static",fs))
+	handler.Handle("/static/", http.StripPrefix("/static", fs))
 
 	// Register all the routes
 	handler.HandleFunc("/home", handleHome)

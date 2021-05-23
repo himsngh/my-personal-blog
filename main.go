@@ -14,7 +14,7 @@ func app() error {
 	}
 
 	server := &http.Server{
-		Addr: ":8080",
+		Addr:    ":8080",
 		Handler: handler,
 	}
 
