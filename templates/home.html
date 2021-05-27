@@ -41,26 +41,39 @@
         </div>
     </nav>
 
-    <main id="main">
-        <article class="main-article-1">
+    <section>
+        <div>
+            **************** Content Info ****************
+        </div>
+    </section>
+
+    <section id="section">
+        <article class="section-article-1">
            <div class="article-1">
                 Section-1
            </div>
         </article>
 
-        <article class="main-article-2">
+        <article class="section-article-2">
             <div>
                 Section-2
+
+                {{ template "postcard" . }}
+
             </div>
 
         </article>
 
-        <article class="main-article-3">
+        <article class="section-article-3">
             <div>
                 Section-3
+                {{ range $index, $post := . }}
+                    <p> {{ $post.Title }} {{ $post.Data }}</p>
+                {{ end }}
+
             </div>
         </article>
-    </main>
+    </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 </body>

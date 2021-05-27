@@ -1,18 +1,18 @@
 
-main {
+section {
     display: grid;
 }
 
-.main-article-1 {
+.section-article-1 {
     grid-column: 1/2;
 }
-.main-article-2 {
+.section-article-2 {
     grid-column: 2/4;
-    border-left: 6px solid black;
-    border-right: 6px solid black;
+    border-left: 3px solid black;
+    border-right: 3px solid black;
     height: auto;
 }
 
-.main-article-3 {
+.section-article-3 {
     grid-column: 4/5;
 }
