@@ -11,16 +11,30 @@ import (
 type Post struct {
 	Title string
 	Data string
+	Date string
+	Author Author
+}
+
+type Author struct {
+	 Name string
 }
 
 var post = []*Post {
 	{
 		Title: "Hello",
 		Data: "World",
+		Date: "Today",
+		Author : Author {
+			Name: "Him",
+		},
 	},
 	{
 		Title: "Test",
 		Data: "Testing-Data",
+		Date: "Today",
+		Author : Author {
+			Name: "Him-2",
+		},
 	},
 }
 
@@ -33,59 +47,33 @@ func Initialize() (http.Handler, error) {
 
 	handler := http.NewServeMux()
 
+	tpl := template.Must(template.ParseGlob(cwd + "/templates/*.html"))
+
 	fs := http.FileServer(http.Dir(cwd + "/static"))
 	handler.Handle("/static/", http.StripPrefix("/static", fs))
-
-	tpl, err := template.ParseGlob(cwd + "/templates/*.html")
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	// Register all the routes
 	handler.HandleFunc("/home", func(writer http.ResponseWriter, request *http.Request) {
 		handleHome(writer, request, tpl)
 	})
-
-	handler.HandleFunc("/about", handleAbout)
+	handler.HandleFunc("/about", func(writer http.ResponseWriter, request *http.Request) {
+		handleAbout(writer, request, tpl)
+	})
 
 	return handler, nil
 }
 
 func handleHome(w http.ResponseWriter, r *http.Request, tpl *template.Template) {
 
-	//cwd, err := os.Getwd()
-	//if err != nil {
-	//	return
-	//}
-
-	//tpl, err := template.ParseFiles(cwd + "/templates/home.html")
-	//if err != nil {
-	//	http.Error(w, err.Error(), http.StatusInternalServerError)
-	//	return
-	//}
 	if err := tpl.ExecuteTemplate(w, "home.html", post); err != nil {
 		log.Fatal(err)
 		return
 	}
-	//if err := tpl.Execute(w, post); err != nil {
-	//	return
-	//}
 }
 
-func handleAbout(w http.ResponseWriter, r *http.Request) {
+func handleAbout(w http.ResponseWriter, r *http.Request, tpl *template.Template) {
 
-	cwd, err := os.Getwd()
-	if err != nil {
-		return
-	}
-
-	tpl, err := template.ParseFiles(cwd + "/templates/about.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	if err := tpl.Execute(w, nil); err != nil {
+	if err := tpl.ExecuteTemplate(w,"about.html", nil); err != nil {
 		return
 	}
 }
