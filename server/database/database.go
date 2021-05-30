@@ -79,7 +79,7 @@ func (s *dbStore) SearchPost(params []string) ([]*Post, error) {
 	panic("implement me")
 }
 
-func (s *dbStore) CreateProfile(firstName, lastName, email , password string, opts ...string) (*Profile, error) {
+func (s *dbStore) CreateProfile(firstName, lastName, email , password string) (*Profile, error) {
 	panic("implement me")
 }
 

@@ -11,7 +11,7 @@ type Store interface {
 	DeletePost(id int) error
 	SearchPost(params []string) ([]*Post, error)
 
-	CreateProfile(firstName, lastName, email , password string, opts ...string) (*Profile, error)
+	CreateProfile(firstName, lastName, email , password string) (*Profile, error)
 	GetProfile(id string) (*Profile, error)
 	DeleteProfile(id string)
 

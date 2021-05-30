@@ -57,7 +57,33 @@ func (s *Server) ServeRoutes() (http.Handler, error) {
 }
 
 func (s *Server) handleSignUp(w http.ResponseWriter, r *http.Request) {
-	// TODO IMPLEMENT ME
+
+	if r.Method == http.MethodGet {
+
+	}
+
+	switch r.Method {
+
+	case http.MethodGet:
+		if err := s.template.ExecuteTemplate(w,"signup.html", nil); err != nil {
+			log.Println("Error executing about template : ", err.Error())
+			return
+		}
+
+	case http.MethodPost:
+		if err := r.ParseForm(); err != nil {
+			log.Println("Error Parsing Form Data err : ", err.Error())
+			return
+		}
+
+		log.Println(r.PostForm)
+		log.Println(r.Form)
+
+	default:
+		http.Error(w, "wrong route", http.StatusBadRequest)
+		return
+	}
+
 }
 
 func (s *Server) handleLogin(w http.ResponseWriter, r *http.Request) {
