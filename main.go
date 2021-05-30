@@ -8,7 +8,12 @@ import (
 
 func app() error {
 
-	handler, err := routes.Initialize()
+	routesServer, err := routes.NewServer()
+	if err != nil {
+		return err
+	}
+
+	handler, err := routesServer.ServeRoutes()
 	if err != nil {
 		return err
 	}

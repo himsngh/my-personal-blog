@@ -1,79 +1,86 @@
 package routes
 
 import (
+	"github.com/himsngh/my-personal-blog/database"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 )
 
-
-type Post struct {
-	Title string
-	Data string
-	Date string
-	Author Author
+type Server struct {
+	dbStore database.Store
+	template 	*template.Template
 }
 
-type Author struct {
-	 Name string
-}
+var CurrentWorkingDirectory, _ = os.Getwd()
 
-var post = []*Post {
-	{
-		Title: "Hello",
-		Data: "World",
-		Date: "Today",
-		Author : Author {
-			Name: "Him",
-		},
-	},
-	{
-		Title: "Test",
-		Data: "Testing-Data",
-		Date: "Today",
-		Author : Author {
-			Name: "Him-2",
-		},
-	},
-}
 
-func Initialize() (http.Handler, error) {
+func NewServer() (*Server, error) {
 
-	cwd, err := os.Getwd()
+	tpl := template.Must(template.ParseGlob(CurrentWorkingDirectory + "/templates/*.html"))
+
+	dbStore, err := database.NewDatabaseStore()
 	if err != nil {
+		log.Println("Error creating the database store: err ", err.Error())
 		return nil, err
 	}
 
+	return &Server{
+		dbStore: dbStore,
+		template: tpl,
+	}, nil
+}
+
+func (s *Server) ServeRoutes() (http.Handler, error) {
+
 	handler := http.NewServeMux()
 
-	tpl := template.Must(template.ParseGlob(cwd + "/templates/*.html"))
-
-	fs := http.FileServer(http.Dir(cwd + "/static"))
+	fs := http.FileServer(http.Dir(CurrentWorkingDirectory + "/static"))
 	handler.Handle("/static/", http.StripPrefix("/static", fs))
 
 	// Register all the routes
+	handler.HandleFunc("/signup", func(writer http.ResponseWriter, request *http.Request) {
+		s.handleSignUp(writer, request)
+	})
+	handler.HandleFunc("/login", func(writer http.ResponseWriter, request *http.Request) {
+		s.handleLogin(writer, request)
+	})
 	handler.HandleFunc("/home", func(writer http.ResponseWriter, request *http.Request) {
-		handleHome(writer, request, tpl)
+		s.handleHome(writer, request)
 	})
 	handler.HandleFunc("/about", func(writer http.ResponseWriter, request *http.Request) {
-		handleAbout(writer, request, tpl)
+		s.handleAbout(writer, request)
 	})
 
 	return handler, nil
 }
 
-func handleHome(w http.ResponseWriter, r *http.Request, tpl *template.Template) {
+func (s *Server) handleSignUp(w http.ResponseWriter, r *http.Request) {
+	// TODO IMPLEMENT ME
+}
 
-	if err := tpl.ExecuteTemplate(w, "home.html", post); err != nil {
-		log.Fatal(err)
+func (s *Server) handleLogin(w http.ResponseWriter, r *http.Request) {
+	// TODO IMPLEMENT ME
+}
+
+func (s *Server) handleHome(w http.ResponseWriter, r *http.Request) {
+
+	postList, err := s.dbStore.ListPost()
+	if err != nil {
+		return
+	}
+
+	if err := s.template.ExecuteTemplate(w, "home.html", postList); err != nil {
+		log.Println("Error executing home template : ", err.Error())
 		return
 	}
 }
 
-func handleAbout(w http.ResponseWriter, r *http.Request, tpl *template.Template) {
+func (s *Server) handleAbout(w http.ResponseWriter, r *http.Request) {
 
-	if err := tpl.ExecuteTemplate(w,"about.html", nil); err != nil {
+	if err := s.template.ExecuteTemplate(w,"about.html", nil); err != nil {
+		log.Println("Error executing about template : ", err.Error())
 		return
 	}
 }

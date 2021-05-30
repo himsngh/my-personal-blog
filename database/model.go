@@ -1,16 +1,18 @@
 package database
 
 import (
-	"database/sql"
 	"time"
 )
 
 type Store interface {
 	CreatePost(post *Post) (*Post, error)
-	GetPost(id int) (sql.Row, error)
-	ListPost() (sql.Rows, error)
+	GetPost(id int) (*Post, error)
+	ListPost() ([]*Post, error)
 	DeletePost(id int) error
-	SearchPost(params []string) (sql.Rows, error)
+	SearchPost(params []string) ([]*Post, error)
+
+	CreateProfile(firstName, lastName, email , password string, opts ...string) (*Profile, error)
+	GetProfile(id string) (*Profile, error)
 }
 
 type Post struct {
@@ -18,10 +20,10 @@ type Post struct {
 	Title  string
 	Data   string
 	Date   time.Time
-	Author *Author
+	Author *Profile
 }
 
-type Author struct {
+type Profile struct {
 	Id             string
 	FirstName      string
 	LastName       string
