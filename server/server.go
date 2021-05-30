@@ -58,10 +58,6 @@ func (s *Server) ServeRoutes() (http.Handler, error) {
 
 func (s *Server) handleSignUp(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == http.MethodGet {
-
-	}
-
 	switch r.Method {
 
 	case http.MethodGet:
@@ -76,8 +72,15 @@ func (s *Server) handleSignUp(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// TODO create accout for the user
 		log.Println(r.PostForm)
 		log.Println(r.Form)
+		//firstName := r.FormValue("firstName")
+		//lastName := r.FormValue("lastName")
+		//email := r.FormValue("email")
+
+		// logged in
+		http.Redirect(w, r, "/home", http.StatusTemporaryRedirect)
 
 	default:
 		http.Error(w, "wrong route", http.StatusBadRequest)
