@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type server struct {
+type dbStore struct {
 	db *sql.DB
 }
 
@@ -22,12 +22,12 @@ func NewDatabaseStore() (Store, error) {
 		return nil, err
 	}
 
-	return &server{
+	return &dbStore{
 		db:database,
 	}, nil
 }
 
-func (s *server) CreatePost(post *Post) (*Post, error) {
+func (s *dbStore) CreatePost(post *Post) (*Post, error) {
 
 	profile, err := s.GetProfile(post.Author.Id)
 	if err != nil {
@@ -53,26 +53,40 @@ func (s *server) CreatePost(post *Post) (*Post, error) {
 	return post, nil
 }
 
-func (s *server) GetPost(id int) (*Post, error) {
+func (s *dbStore) GetPost(id int) (*Post, error) {
 	panic("implement me")
 }
 
-func (s *server) ListPost() ([]*Post, error) {
+func (s *dbStore) ListPost() ([]*Post, error) {
+	//panic("implement me")
+
+	posts := &Post{
+		Id:     "123",
+		Title:  "Test",
+		Data:   "Testing",
+		Date:   time.Time{}.Local(),
+		Author: nil,
+	}
+
+	return []*Post{posts}, nil
+}
+
+func (s *dbStore) DeletePost(id int) error {
 	panic("implement me")
 }
 
-func (s *server) DeletePost(id int) error {
+func (s *dbStore) SearchPost(params []string) ([]*Post, error) {
 	panic("implement me")
 }
 
-func (s *server) SearchPost(params []string) ([]*Post, error) {
+func (s *dbStore) CreateProfile(firstName, lastName, email , password string, opts ...string) (*Profile, error) {
 	panic("implement me")
 }
 
-func (s *server) CreateProfile(firstName, lastName, email , password string, opts ...string) (*Profile, error) {
+func (s *dbStore) GetProfile(id string) (*Profile, error) {
 	panic("implement me")
 }
 
-func (s *server) GetProfile(id string) (*Profile, error) {
+func (s *dbStore) DeleteProfile(id string) {
 	panic("implement me")
 }

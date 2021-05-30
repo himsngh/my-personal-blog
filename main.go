@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/himsngh/my-personal-blog/routes"
+	"github.com/himsngh/my-personal-blog/server"
 	"log"
 	"net/http"
 )
 
 func app() error {
 
-	routesServer, err := routes.NewServer()
+	routesServer, err := server.NewServer()
 	if err != nil {
 		return err
 	}
@@ -18,12 +18,12 @@ func app() error {
 		return err
 	}
 
-	server := &http.Server{
+	serve := &http.Server{
 		Addr:    ":8080",
 		Handler: handler,
 	}
 
-	return server.ListenAndServe()
+	return serve.ListenAndServe()
 }
 
 func main() {

@@ -13,6 +13,8 @@ type Store interface {
 
 	CreateProfile(firstName, lastName, email , password string, opts ...string) (*Profile, error)
 	GetProfile(id string) (*Profile, error)
+	DeleteProfile(id string)
+
 }
 
 type Post struct {

@@ -1,7 +1,7 @@
-package routes
+package server
 
 import (
-	"github.com/himsngh/my-personal-blog/database"
+	"github.com/himsngh/my-personal-blog/server/database"
 	"html/template"
 	"log"
 	"net/http"
@@ -9,8 +9,8 @@ import (
 )
 
 type Server struct {
-	dbStore database.Store
-	template 	*template.Template
+	dbStore  database.Store
+	template *template.Template
 }
 
 var CurrentWorkingDirectory, _ = os.Getwd()
@@ -39,7 +39,7 @@ func (s *Server) ServeRoutes() (http.Handler, error) {
 	fs := http.FileServer(http.Dir(CurrentWorkingDirectory + "/static"))
 	handler.Handle("/static/", http.StripPrefix("/static", fs))
 
-	// Register all the routes
+	// Register all the server
 	handler.HandleFunc("/signup", func(writer http.ResponseWriter, request *http.Request) {
 		s.handleSignUp(writer, request)
 	})
@@ -49,8 +49,8 @@ func (s *Server) ServeRoutes() (http.Handler, error) {
 	handler.HandleFunc("/home", func(writer http.ResponseWriter, request *http.Request) {
 		s.handleHome(writer, request)
 	})
-	handler.HandleFunc("/about", func(writer http.ResponseWriter, request *http.Request) {
-		s.handleAbout(writer, request)
+	handler.HandleFunc("/profile", func(writer http.ResponseWriter, request *http.Request) {
+		s.handleProfile(writer, request)
 	})
 
 	return handler, nil
@@ -77,7 +77,7 @@ func (s *Server) handleHome(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Server) handleAbout(w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleProfile(w http.ResponseWriter, r *http.Request) {
 
 	if err := s.template.ExecuteTemplate(w,"about.html", nil); err != nil {
 		log.Println("Error executing about template : ", err.Error())
